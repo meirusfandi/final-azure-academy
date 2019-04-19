@@ -9,6 +9,85 @@
     <script type="text/javascript" src="jquery.min.js"></script>
 </head>
 <body>
+    
+    <div class="container">
+		<div class="card">
+			<div class="card-body">
+
+                <h2 class="text-center">Blob Storage Computer Vision - Mei Rusfandi</h2>
+                <hr>
+                <h3>Add Image To Analize using Computer Vision</h3>
+                    
+                <form action="index.php" method="post" class="form-inline" enctype="multipart/form-data">
+                    <input type="file" name="image"> 
+                    <input type="submit" value="Upload" id="upload" name="upload" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+		<div class="card">
+			<div class="card-body">
+
+                <h2 class="text-center">Hasil Upload File - Mei Rusfandi</h2>
+                <hr>
+                <h3>View Image To Analize using Computer Vision and Analyze it</h3>
+                <table class='table table-hover'>
+			<thead>
+				<tr>
+					<th>No. </th>
+					<th>File Name</th>
+					<th>File URL</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+                <tbody>
+                    <?php
+                    $i = 0;
+                    do {
+                        foreach ($result->getBlobs() as $blob)
+                        {
+                            ?>
+                            <tr>
+                                <td><?php echo ++$i;?></td>
+                                <td><?php echo $blob->getName() ?></td>
+                                <td><?php echo $blob->getUrl() ?></td>
+                                <td>
+                                    <form action="analyze.php" method="post">
+                                        <input type="hidden" name="url" value="<?php echo $blob->getUrl()?>">
+                                        <input type="submit" name="submit" value="Analyze!" class="btn btn-primary">
+                                    </form>
+                                </td>
+                            </tr>
+                            <?php
+                        }
+                        $listBlobsOptions->setContinuationToken($result->getContinuationToken());
+                    } while($result->getContinuationToken());
+
+                    ?>
+                </tbody>
+            </table>
+
+                <div class="card-body">
+                <div id="wrapper" style="width:1020px; display:table;">
+                    <div id="jsonOutput" style="width:600px; display:table-cell;">
+                        Response:
+                        <br><br>
+                        <textarea id="responseTextArea" class="UIInput"
+                                style="width:580px; height:400px;"></textarea>
+                    </div>
+                    <div id="imageDiv" style="width:420px; display:table-cell;">
+                        Source image:
+                        <br><br>
+                        <img id="sourceImage" width="400" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     <script type="text/javascript">
         function processImage(){
             var subscriptionKey = "db80b96ff6d0481b8525b516a219cfaa";
@@ -101,84 +180,6 @@
 
         $result = $blobClient->listBlobs($container_name, $listBlobs);
     ?>
-
-    <div class="container">
-		<div class="card">
-			<div class="card-body">
-
-                <h2 class="text-center">Blob Storage Computer Vision - Mei Rusfandi</h2>
-                <hr>
-                <h3>Add Image To Analize using Computer Vision</h3>
-                    
-                <form action="index.php" method="post" class="form-inline" enctype="multipart/form-data">
-                    <input type="file" name="image"> 
-                    <input type="submit" value="Upload" id="upload" name="upload" class="btn btn-primary">
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="container">
-		<div class="card">
-			<div class="card-body">
-
-                <h2 class="text-center">Hasil Upload File - Mei Rusfandi</h2>
-                <hr>
-                <h3>View Image To Analize using Computer Vision and Analyze it</h3>
-                <table class='table table-hover'>
-			<thead>
-				<tr>
-					<th>No. </th>
-					<th>File Name</th>
-					<th>File URL</th>
-					<th>Action</th>
-				</tr>
-			</thead>
-                <tbody>
-                    <?php
-                    $i = 0;
-                    do {
-                        foreach ($result->getBlobs() as $blob)
-                        {
-                            ?>
-                            <tr>
-                                <td><?php echo ++$i;?></td>
-                                <td><?php echo $blob->getName() ?></td>
-                                <td><?php echo $blob->getUrl() ?></td>
-                                <td>
-                                    <form action="analyze.php" method="post">
-                                        <input type="hidden" name="url" value="<?php echo $blob->getUrl()?>">
-                                        <input type="submit" name="submit" value="Analyze!" class="btn btn-primary">
-                                    </form>
-                                </td>
-                            </tr>
-                            <?php
-                        }
-                        $listBlobsOptions->setContinuationToken($result->getContinuationToken());
-                    } while($result->getContinuationToken());
-
-                    ?>
-                </tbody>
-            </table>
-
-                <div class="card-body">
-                <div id="wrapper" style="width:1020px; display:table;">
-                    <div id="jsonOutput" style="width:600px; display:table-cell;">
-                        Response:
-                        <br><br>
-                        <textarea id="responseTextArea" class="UIInput"
-                                style="width:580px; height:400px;"></textarea>
-                    </div>
-                    <div id="imageDiv" style="width:420px; display:table-cell;">
-                        Source image:
-                        <br><br>
-                        <img id="sourceImage" width="400" />
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
 
 </body>
 </html>
