@@ -110,7 +110,7 @@
                 <hr>
                 <h3>Add Image To Analize using Computer Vision</h3>
                     
-                <form action="upload.php" method="post" class="form-inline" enctype="multipart/form-data">
+                <form action="index.php" method="post" class="form-inline" enctype="multipart/form-data">
                     <input type="file" name="image"> 
                     <input type="submit" value="Upload" id="upload" name="upload" class="btn btn-primary">
                 </form>
