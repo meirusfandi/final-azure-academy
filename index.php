@@ -54,7 +54,7 @@
                                     <td><?php echo $blob->getUrl() ?></td>
                                     <td>
                                         <form action="analyze.php" method="post">
-                                            <input type="hidden" name="url" value="<?php echo $blob->getUrl()?>">
+                                            <input type="hidden" name="vision" value="<?php echo $blob->getUrl()?>">
                                             <input type="submit" name="submit" value="Analyze!" class="btn btn-primary">
                                         </form>
                                     </td>
