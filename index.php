@@ -125,6 +125,41 @@
                 <h2 class="text-center">Hasil Upload File - Mei Rusfandi</h2>
                 <hr>
                 <h3>View Image To Analize using Computer Vision and Analyze it</h3>
+                <table class='table table-hover'>
+			<thead>
+				<tr>
+					<th>No. </th>
+					<th>File Name</th>
+					<th>File URL</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+                <tbody>
+                    <?php
+                    $i = 0;
+                    do {
+                        foreach ($result->getBlobs() as $blob)
+                        {
+                            ?>
+                            <tr>
+                                <td><?php echo ++$i;?></td>
+                                <td><?php echo $blob->getName() ?></td>
+                                <td><?php echo $blob->getUrl() ?></td>
+                                <td>
+                                    <form action="analyze.php" method="post">
+                                        <input type="hidden" name="url" value="<?php echo $blob->getUrl()?>">
+                                        <input type="submit" name="submit" value="Analyze!" class="btn btn-primary">
+                                    </form>
+                                </td>
+                            </tr>
+                            <?php
+                        }
+                        $listBlobsOptions->setContinuationToken($result->getContinuationToken());
+                    } while($result->getContinuationToken());
+
+                    ?>
+                </tbody>
+            </table>
 
                 <div class="card-body">
                 <div id="wrapper" style="width:1020px; display:table;">
