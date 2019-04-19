@@ -1,3 +1,47 @@
+<?php 
+        require_once 'vendor/autoload.php';
+        require_once './random_string.php';
+
+        use MicrosoftAzure\Storage\Blob\BlobRestProxy;
+        use MicrosoftAzure\Storage\Common\Exceptions\ServiceException;
+        use MicrosoftAzure\Storage\Blob\Models\ListBlobsOptions;
+        use MicrosoftAzure\Storage\Blob\Models\CreateContainerOptions;
+        use MicrosoftAzure\Storage\Blob\Models\PublicAccessType;
+
+        // $connect_string = "DefaultEndpointsProtocol=https;AccountName=".getenv("ACCOUNT_NAME").";AccountKey=".getenv("ACCOUNT_KEY").";EndpointSuffix=core.windows.net";
+        $connect_string = "DefaultEndpointsProtocol=https;AccountName=fansdev;AccountKey=QFChV4ExeYoe/GCcpbnAagmKnFOvW8y7Lu3dwjyhhnrk/u38o9rLyjoFNXtMLPAO4dKDayHl+nxQPn+jtwKpow==;EndpointSuffix=core.windows.net";
+
+        //create blob client service
+        $blobClient = BlobRestProxy::createBlobService($connect_string);
+        // $blob_client = ServiceBuilder::getInstance()->createBlobService($connect_string);
+
+        $create_container_options = new CreateContainerOptions();
+        $create_container_options->setPublicAccess(PublicAccessType::CONTAINER_AND_BLOBS);
+
+        //setup metadata container
+        $create_container_options->addMetaData("key1", "value1");
+        $create_container_options->addMetaData("key2", "value2");
+
+        //create container name
+        $container_name = "fansdev".generateRandomString();
+
+        if (isset($_POST['upload'])) {
+            $filename = strtolower($_FILES["image"]["name"]);
+            $content = fopen($_FILES["image"]["tmp_name"], "r");
+        
+            $blobClient->createBlockBlob($container_name, $filename, $content);
+            header("Location: index.php");
+        }
+        if (isset($_POST['analyze'])){
+
+        }
+
+        $listBlobs = new ListBlobsOptions();
+        $listBlobs->setPrefix("");
+
+        $result = $blobClient->listBlobs($container_name, $listBlobs);
+    ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,50 +101,6 @@
             });
         };
     </script>
-
-    <?php 
-        require_once 'vendor/autoload.php';
-        require_once './random_string.php';
-
-        use MicrosoftAzure\Storage\Blob\BlobRestProxy;
-        use MicrosoftAzure\Storage\Common\Exceptions\ServiceException;
-        use MicrosoftAzure\Storage\Blob\Models\ListBlobsOptions;
-        use MicrosoftAzure\Storage\Blob\Models\CreateContainerOptions;
-        use MicrosoftAzure\Storage\Blob\Models\PublicAccessType;
-
-        // $connect_string = "DefaultEndpointsProtocol=https;AccountName=".getenv("ACCOUNT_NAME").";AccountKey=".getenv("ACCOUNT_KEY").";EndpointSuffix=core.windows.net";
-        $connect_string = "DefaultEndpointsProtocol=https;AccountName=fansdev;AccountKey=QFChV4ExeYoe/GCcpbnAagmKnFOvW8y7Lu3dwjyhhnrk/u38o9rLyjoFNXtMLPAO4dKDayHl+nxQPn+jtwKpow==;EndpointSuffix=core.windows.net";
-
-        //create blob client service
-        $blobClient = BlobRestProxy::createBlobService($connect_string);
-        // $blob_client = ServiceBuilder::getInstance()->createBlobService($connect_string);
-
-        $create_container_options = new CreateContainerOptions();
-        $create_container_options->setPublicAccess(PublicAccessType::CONTAINER_AND_BLOBS);
-
-        //setup metadata container
-        $create_container_options->addMetaData("key1", "value1");
-        $create_container_options->addMetaData("key2", "value2");
-
-        //create container name
-        $container_name = "fansdev".generateRandomString();
-
-        if (isset($_POST['upload'])) {
-            $filename = strtolower($_FILES["image"]["name"]);
-            $content = fopen($_FILES["image"]["tmp_name"], "r");
-        
-            $blobClient->createBlockBlob($container_name, $filename, $content);
-            header("Location: index.php");
-        }
-        if (isset($_POST['analyze'])){
-
-        }
-
-        $listBlobs = new ListBlobsOptions();
-        $listBlobs->setPrefix("");
-
-        $result = $blobClient->listBlobs($container_name, $listBlobs);
-    ?>
 
     <div class="container">
 		<div class="card">
